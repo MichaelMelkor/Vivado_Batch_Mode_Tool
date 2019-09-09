@@ -1,0 +1,133 @@
+
+################################################################################
+#!/bin/sh
+echo "==========================================="
+echo "__    __  _____        _   _____   __   _ " 
+echo "\ \  / / |  _  \      | | /  ___/ |  \ | |" 
+echo " \ \/ /  | | | |      | | | |___  |   \| |" 
+echo "  }  {   | | | |      | | \___  \ | |\   |" 
+echo " / /\ \  | |_| |      | |  ___| | | | \  |" 
+echo "/_/  \_\ |_____/      |_| /_____/ |_|  \_| "
+echo "==========================================="
+echo -e "        \033[43;30mVivado_batch_mode_tool  V1.0\033[0m" 
+echo -e "Author: Michael" 
+echo -e "Email : zhangzhongyu1202@126.com" 
+echo -e "===========================================\n"
+export vivado_xpr_name=`find ../ -maxdepth 1 -name "*.xpr"  -exec basename {} \; `
+
+if [ "${vivado_xpr_name}" != "" ]; then
+    export part=`cat ../"$vivado_xpr_name" | grep 'Name="Part" Val='|sed 's/^.*Val=\"//g'|sed 's/ *\"\/>.*$//g'`
+    #export part=`cat ../Led.xpr | grep 'Name="Part" Val='|sed 's/^.*Val=\"//g'|sed 's/*\".*$//g'`
+    
+    
+    vivado_bat_cmd="vivado -mode batch -source  ./tcl_dir/${tcl_file} -notrace ../${vivado_xpr_name}"
+    
+    if [ "` find -maxdepth 1 -name "bitstream" `" == "./bitstream" ]; then
+        echo "Bitstream's Dir exist."
+    else
+        mkdir bitstream
+        echo "Create Bitstream's Dir "
+    fi
+
+    while [ "${i}" != "exit" ]
+    do
+    echo -e "Your Device is : <\033[32m$part\033[0m> "
+    echo -e "You are using the Vivado Project .xpr : <\033[32m$vivado_xpr_name\033[0m> "
+    
+        echo "Which step do you want to take ? "
+        echo -e "  syn)     Only \033[36m Synthesis \033[0m \n "  
+        echo -e "  imp)     Only \033[36m Implemention \033[0m \n "  
+        echo -e "  bit)     Only \033[36m Write Bitstream \033[0m \n"   
+        echo -e "  syn_imp) \033[32mSynth & Impl \033[0m \n"    
+        echo -e "  all)     \033[32mSynth & Impl & Write Bitstream \033[0m \n"    
+        echo -e "  prog)    \033[32mProgram Device \033[0m \n"    
+        echo -e "  gui)     \033[32mStart GUI\033[0m \n "
+        echo -e "\n\033[31mexit)  EXIT\033[0m"
+        read -p "Please input STEP NAME like 'syn' or 'exit' and then press 'Enter' : " i
+        echo -e "\n"
+        case $i in
+        syn)
+            tcl_file="syn.tcl"
+            echo "Loading .tcl file : $tcl_file"
+            vivado_bat_cmd="vivado -mode batch -source ./tcl_dir/${tcl_file} ../${vivado_xpr_name} -notrace"
+            $vivado_bat_cmd
+    
+            echo -e "\n    ----- \033[36mSynthesis Finish\033[0m -----\n" 
+            echo -e "    *****Press 'Enter' to return*****\n"
+            read anykey
+            echo -e "**********************************************************************\n**********************************************************************\n"
+                ;;
+        imp)
+            tcl_file="imp.tcl"
+            echo "Loading .tcl file : $tcl_file"
+            vivado_bat_cmd="vivado -mode batch -source ./tcl_dir/${tcl_file} ../${vivado_xpr_name} -notrace"
+            $vivado_bat_cmd
+    
+            echo -e "\n    ----- \033[36mImplemention Finish\033[0m -----\n"
+            echo -e "    *****Press 'Enter' to return*****\n"
+            read anykey
+            echo -e "**********************************************************************\n**********************************************************************\n"
+                ;;
+        bit)
+            tcl_file="runbit.tcl"
+            echo "Loading .tcl file : $tcl_file"
+            vivado_bat_cmd="vivado -mode batch -source ./tcl_dir/${tcl_file} ../${vivado_xpr_name} -notrace"
+            $vivado_bat_cmd
+    
+            echo -e "\n    ----- \033[36mWrite Bitstream Finish\033[0m -----\n"
+            echo -e "    *****Press 'Enter' to return*****\n"
+            read anykey
+            echo -e "**********************************************************************\n**********************************************************************\n"
+                ;;
+        syn_imp)
+            tcl_file="syn_imp.tcl"
+            echo "Loading .tcl file : $tcl_file"
+            vivado_bat_cmd="vivado -mode batch -source ./tcl_dir/${tcl_file} ../${vivado_xpr_name} -notrace"
+            $vivado_bat_cmd
+    
+            echo -e "\n    ----- \033[36mSyn & Impl Both Finish\033[0m -----\n"
+            echo -e "    *****Press 'Enter' to return*****\n"
+            read anykey
+            echo -e "**********************************************************************\n**********************************************************************\n"
+                ;;
+        all)
+            tcl_file="runall.tcl"
+            echo "Loading .tcl file : $tcl_file"
+            vivado_bat_cmd="vivado -mode batch -source ./tcl_dir/${tcl_file} ../${vivado_xpr_name} -notrace"
+            $vivado_bat_cmd
+    
+            echo -e "\n    ----- \033[36mAll Steps Finish\033[0m -----\n"
+            echo -e "    *****Press 'Enter' to return*****\n"
+            read anykey
+            echo -e "**********************************************************************\n**********************************************************************\n"
+                ;;        
+        prog)
+            tcl_file="prog.tcl"
+            echo "Loading .tcl file : $tcl_file"
+            vivado_bat_cmd="vivado -mode batch -source ./tcl_dir/${tcl_file} ../${vivado_xpr_name} -notrace"
+            $vivado_bat_cmd
+            echo -e "    *****Press 'Enter' to return*****\n"
+            read anykey
+            echo -e "**********************************************************************\n**********************************************************************\n"
+                ;;     
+        gui)
+            vivado -source ../$vivado_xpr_name
+            
+            echo -e "    *****Press 'Enter' to return*****\n"
+            read anykey
+            echo -e "**********************************************************************\n**********************************************************************\n"
+                ;;            
+        exit)
+            echo -e "**********************************************************************\n**********************************************************************\n"
+                ;;
+        *)
+            echo -e "\n    \033[31mERROR: Please input an avaliable number!\033[0m"
+            echo -e "    *****Press 'Enter' to return*****\n"
+            read anykey
+            esac
+    done 
+else
+    echo -e "\033[31m******ERROR : Cannot Find Any Vivado Project!******\033[0m"
+fi
+i=""
+echo -e "    \033[32m********  Exit  ********\033[0m"

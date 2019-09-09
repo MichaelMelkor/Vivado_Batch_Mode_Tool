@@ -15,4 +15,5 @@ If you cannot read Chinese,you can follow the follow steps:
   
   5)Just follow the interface prompt to do what you want. 
   
-#=============================================================================================================================
+Hoping this would help you!  
+#========================================================================================

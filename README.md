@@ -9,3 +9,4 @@ If you cannot read Chinese,you can follow the follow steps:
   3)cd to the directory /Vivado_bat_mod_tool/
   4)Executing the file 'Vivado_batch_mode_tool' by using shell command in the terminal: $./Vivado_batch_mode_tool
   5)Just follow the interface prompt to do what you want. 
+#=============================================================================================================================

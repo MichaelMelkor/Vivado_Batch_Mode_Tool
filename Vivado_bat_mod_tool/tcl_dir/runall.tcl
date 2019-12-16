@@ -21,3 +21,4 @@ launch_runs impl_1
 wait_on_run impl_1
 open_run impl_1
 write_bitstream ./bitstream/[current_project].bit -force
+write_debug_probes -no_partial_ltxfile -quiet -force ./bitstream/[current_project].ltx
